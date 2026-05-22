@@ -1,84 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Sample Website</title>
-    <style>
-        /* Basic styling for the page */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        header {
-            background-color: #007BFF;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-        }
-        nav {
-            background-color: #333;
-            padding: 0.5rem;
-            text-align: center;
-        }
-        nav a {
-            color: white;
-            margin: 0 1rem;
-            text-decoration: none;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        main {
-            padding: 1rem;
-        }
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 0.5rem;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
+import java.util.*;
 
-    <header>
-        <h1>Welcome to My Sample Website</h1>
-        <p>This is a free HTML example you can use.</p>
-    </header>
+// Product Class
+class Product {
+    int id;
+    String name;
+    double price;
 
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-    </nav>
+    Product(int id, String name, double price) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
 
-    <main>
-        <section id="home">
-            <h2>Home</h2>
-            <p>This is the home section of your website.</p>
-        </section>
+    @Override
+    public String toString() {
+        return id + " - " + name + " ($" + price + ")";
+    }
+}
 
-        <section id="about">
-            <h2>About</h2>
-            <p>This section tells visitors about your site or yourself.</p>
-        </section>
+// Shopping Cart Class
+class ShoppingCart {
+    List<Product> cart;
+    
+    ShoppingCart() {
+        cart = new ArrayList<>();
+    }
+    
+    void addProduct(Product product) {
+        cart.add(product);
+        System.out.println(product.name + " added to cart.");
+    }
+    
+    void removeProduct(int productId) {
+        cart.removeIf(product -> product.id == productId);
+        System.out.println("Product with ID " + productId + " removed from cart.");
+    }
+    
+    void viewCart() {
+        System.out.println("Your Cart:");
+        for (Product p : cart) {
+            System.out.println(p);
+        }
+    }
+    
+    double calculateTotal() {
+        double total = 0;
+        for (Product p : cart) {
+            total += p.price;
+        }
+        return total;
+    }
+}
 
-        <section id="contact">
-            <h2>Contact</h2>
-            <p>Email: example@example.com</p>
-        </section>
-    </main>
+// E-Commerce Application
+public class ECommerceApp {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ShoppingCart cart = new ShoppingCart();
+        
+        List<Product> products = new ArrayList<>();
+        products.add(new Product(1, "Laptop", 800.00));
+        products.add(new Product(2, "Smartphone", 500.00));
+        products.add(new Product(3, "Headphones", 50.00));
 
-    <footer>
-        &copy; 2026 My Sample Website
-    </footer>
+        while (true) {
+            System.out.println("\n1. View Products\n2. Add to Cart\n3. Remove from Cart\n4. View Cart\n5. Checkout\n6. Exit");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
 
-</body>
-</html>
+            switch (choice) {
+                case 1:
+                    System.out.println("Available Products:");
+                    for (Product p : products) {
+                        System.out.println(p);
+                    }
+                    break;
+                case 2:
+                    System.out.print("Enter product ID to add: ");
+                    int addId = scanner.nextInt();
+                    for (Product p : products) {
+                        if (p.id == addId) {
+                            cart.addProduct(p);
+                        }
+                    }
+                    break;
+                case 3:
+                    System.out.print("Enter product ID to remove: ");
+                    int removeId = scanner.nextInt();
+                    cart.removeProduct(removeId);
+                    break;
+                case 4:
+                    cart.viewCart();
+                    break;
+                case 5:
+                    System.out.println("Total Price: $" + cart.calculateTotal());
+                    System.out.println("Thank you for shopping with us!");
+                    return;
+                case 6:
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid choice, try again.");
+            }
+        }
+    }
+}
